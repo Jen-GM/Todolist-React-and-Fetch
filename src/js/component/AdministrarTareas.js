@@ -2,24 +2,28 @@ import React, { useState } from "react";
 import "../../styles/Administrartareas.css";
 
 function AdministrarTareas({ tipoTarea, borrarFuncion, indice }) {
-  const [cerrar, setCerrar] = useState("");
+  const [style, setStyle] = useState("notdisplayed");
 
   return (
     <div className="container-tarea">
-      <div className="contenedor-tarea d-flex justify-content-between pb-1">
+      <div
+        className="contenedor-tarea d-flex justify-content-between pb-1"
+        onMouseEnter={(e) => {
+          setStyle("btn-close btn-close-dark");
+        }}
+        onMouseLeave={(e) => {
+          setStyle("notdisplayed");
+        }}
+      >
         <span className="text-dark">{tipoTarea}</span>
-        <div className={cerrar === "container-boton-hide" ? "container-boton-show" : "container-boton-hide"}
-        onMouseOver={() => {setCerrar("container-boton-show")}}
-        >
-          <button
-            type="button"
-            className="btn-close btn-close-dark"
-            aria-label="Close"
-            onClick={() => {
-              borrarFuncion(indice);
-            }}
-          ></button>
-        </div>
+        <div
+          type="button"
+          className={style}
+          aria-label="Close"
+          onClick={() => {
+            borrarFuncion(indice);
+          }}
+        ></div>
       </div>
     </div>
   );

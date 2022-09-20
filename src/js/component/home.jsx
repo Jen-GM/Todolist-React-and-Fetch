@@ -1,10 +1,66 @@
-import React, { useState } from "react";
-import AgregarTareas from "./AdministrarTareas";
+import React, { useEffect, useState } from "react";
+import AdministrarTareas from "./AdministrarTareas";
 
 //create your first component
 const Home = () => {
+  let url = "https://assets.breatheco.de/apis/fake/todos/user/Jen-GM";
   const [addTarea, setAddTarea] = useState([]);
 
+  //Métodos HTTP: GET, POST, PUT, DELETE.
+  const getTareas = () => {
+    fetch(url)
+      .then((res) => res.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.error("Error", error));
+  };
+
+  const postTareas = () => {
+    fetch(url, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify([]),
+    })
+    .then((res) => res.json())
+    .then((data) => console.log(data))
+  };
+
+  const putTareas = (array) => {
+    fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify([
+        { label: "Make the bed", done: false },
+        { label: "Walk the dog", done: false },
+        { label: "Do the replits", done: false },
+      ]),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
+
+  const deleteTareas = () => {
+    fetch(url, {
+      method: "DELETE",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify([
+        { label: "Make the bed", done: false },
+        { label: "Walk the dog", done: false },
+        { label: "Do the replits", done: false },
+      ]),
+    })
+      .then((res) => res.json())
+      .then((data) => console.log(data));
+  };
+
+  /*  useEffect(() => {
+    putTareas();
+    getTareas();
+  }, []); */
+
+  console.log(addTarea); //***Revisar la tarea añadida***
+  postTareas();
+
+  //Funciones de listar y eliminar tareas.
   function listaTareas(e) {
     if (e.key === "Enter") {
       setAddTarea([...addTarea, e.target.value]);
@@ -17,8 +73,6 @@ const Home = () => {
     let newArray = addTarea.filter((element, indice) => indice !== i);
     setAddTarea(newArray);
   }
-
-  console.log(addTarea); //Revisar la tarea añadida
 
   return (
     <div className="contenedor-total">
@@ -37,7 +91,7 @@ const Home = () => {
             <div className="nuevaTarea">
               {addTarea.map((element, i) => {
                 return (
-                  <AgregarTareas
+                  <AdministrarTareas
                     tipoTarea={element}
                     borrarFuncion={eliminarTarea}
                     key={i}
@@ -48,9 +102,20 @@ const Home = () => {
             </div>
           </ul>
           <div className="footer-container">
-          <p className="card-text">
-            <small className="text-muted">{`${addTarea.length ? addTarea.length + ' items left' : 'No hay tareas. Añadir una.'}`}</small>
-          </p>
+            <p className="card-text">
+              <small className="text-muted">{`${
+                addTarea.length
+                  ? addTarea.length + " items left"
+                  : "No hay tareas. Añadir una."
+              }`}</small>
+            </p>
+            <button
+              onClick={(e) => {
+                setAddTarea([]), deleteTareas();
+              }}
+            >
+              Borrar todas las tareas
+            </button>
           </div>
         </div>
       </div>
@@ -59,4 +124,3 @@ const Home = () => {
 };
 
 export default Home;
-
