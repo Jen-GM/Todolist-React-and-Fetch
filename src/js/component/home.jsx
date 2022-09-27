@@ -5,65 +5,38 @@ import AdministrarTareas from "./AdministrarTareas";
 const Home = () => {
   let url = "https://assets.breatheco.de/apis/fake/todos/user/Jen-GM";
   const [addTarea, setAddTarea] = useState([]);
+  const tareas = {
+    label: "",
+    done: false,
+  };
 
   //Métodos HTTP: GET, POST, PUT, DELETE.
   const getTareas = () => {
     fetch(url)
       .then((res) => res.json())
-      .then((data) => console.log(data))
+      .then((data) => setAddTarea(data))
       .catch((error) => console.error("Error", error));
   };
 
-  const postTareas = () => {
-    fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify([]),
-    })
-    .then((res) => res.json())
-    .then((data) => console.log(data))
-  };
-
-  const putTareas = (array) => {
+  //PUT: Actualizar la lista según se agregue/elimine una tarea
+  const putTareas = (toDos) => {
     fetch(url, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify([
-        { label: "Make the bed", done: false },
-        { label: "Walk the dog", done: false },
-        { label: "Do the replits", done: false },
-      ]),
+      body: JSON.stringify(toDos),
     })
       .then((res) => res.json())
-      .then((data) => console.log(data));
+      .then((data) => getTareas());
   };
 
-  const deleteTareas = () => {
-    fetch(url, {
-      method: "DELETE",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify([
-        { label: "Make the bed", done: false },
-        { label: "Walk the dog", done: false },
-        { label: "Do the replits", done: false },
-      ]),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-  };
-
-  /*  useEffect(() => {
-    putTareas();
+  useEffect(() => {
     getTareas();
-  }, []); */
-
-  console.log(addTarea); //***Revisar la tarea añadida***
-  postTareas();
+  }, []);
 
   //Funciones de listar y eliminar tareas.
   function listaTareas(e) {
     if (e.key === "Enter") {
-      setAddTarea([...addTarea, e.target.value]);
+      putTareas([...addTarea, {label:e.target.value, done:false}]);
       e.target.value = "";
     }
   }
@@ -71,7 +44,7 @@ const Home = () => {
   function eliminarTarea(i) {
     console.log(i);
     let newArray = addTarea.filter((element, indice) => indice !== i);
-    setAddTarea(newArray);
+    putTareas(newArray);
   }
 
   return (
@@ -109,13 +82,6 @@ const Home = () => {
                   : "No hay tareas. Añadir una."
               }`}</small>
             </p>
-            <button
-              onClick={(e) => {
-                setAddTarea([]), deleteTareas();
-              }}
-            >
-              Borrar todas las tareas
-            </button>
           </div>
         </div>
       </div>

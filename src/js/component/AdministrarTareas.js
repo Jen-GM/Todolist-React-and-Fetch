@@ -15,7 +15,7 @@ function AdministrarTareas({ tipoTarea, borrarFuncion, indice }) {
           setStyle("notdisplayed");
         }}
       >
-        <span className="text-dark">{tipoTarea}</span>
+        <span className="text-dark">{tipoTarea.label}</span>
         <div
           type="button"
           className={style}
